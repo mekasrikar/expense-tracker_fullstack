@@ -4,7 +4,8 @@ exports.addUser = async (req,res) => {
     const {title,phoneNumber} = req.body
     const income = UserSchema({
         title,
-        phoneNumber
+        phoneNumber,
+        destination
     })
     try{
         if(!title || !phoneNumber){

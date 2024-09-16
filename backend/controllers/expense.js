@@ -25,12 +25,24 @@ exports.addExpense = async (req,res) => {
         res.status(500).json({message:'SERVER ISSUES'})
     }
 }
-exports.getExpense = async (req,res)=>{
-    try{
-        const incomes = await ExpenseSchema.find().sort({createdAt: -1})
-        res.status(200).json(incomes); 
-    }catch(error){
-        res.status(500).json({message:'SERVER ISSUES'})
+exports.getExpense = async (req, res) => {
+    try {
+        // Use MongoDB aggregation to calculate the sum of expenses
+        const result = await ExpenseSchema.aggregate([
+            {
+                $group: {
+                    _id: null, // We are not grouping by any specific field, just calculating the total
+                    totalExpense: { $sum: "$amount" } // Assuming "amount" is the field for the expense value
+                }
+            }
+        ]);
+
+        // If no expenses are found, result will be an empty array
+        const totalExpense = result.length > 0 ? result[0].totalExpense : 0;
+
+        res.status(200).json({ totalExpense }); 
+    } catch (error) {
+        res.status(500).json({ message: 'SERVER ISSUES' });
     }
 }
 

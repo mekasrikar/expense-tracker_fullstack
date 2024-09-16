@@ -12,6 +12,12 @@ const UserSchema = new mongoose.Schema({
         maxLength: 20,
         trim: true
     },
+    destination:{
+        type: String,
+        required: true,
+        trim: true,
+        maxLength: 50
+    },
 }, { timestamps: true })
 
 module.exports = mongoose.model('User',UserSchema)
